@@ -1,0 +1,33 @@
+{
+  "id": "template-opendaylight",
+  "description": "Software defined network",
+  "attributes": {
+    "opendaylight": {
+      
+    }
+  },
+  "deployment": {
+    "opendaylight": {
+      "crowbar-revision": 0,
+      "crowbar-applied": false,
+      "schema-revision": 100,
+      "element_states": {
+        "opendaylight": [ "readying", "ready", "applying" ]
+      },
+      "elements": {},
+      "element_order": [
+        [ "opendaylight" ]
+      ],
+      "element_run_list_order": {
+        "opendaylight": 83
+      },
+      "config": {
+        "environment": "opendaylight-config-base",
+        "mode": "full",
+        "transitions": false,
+        "transition_list": [
+        ]
+      }
+    }
+  }
+}
