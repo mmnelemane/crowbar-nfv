@@ -21,5 +21,20 @@ if node[:platform_family] == "suse"
 
   package "opendaylight-java"
 
+  bash "start opendaylight controller" do
+    user "root"
+    code <<-EOF
+      case "$(pidof karaf | wc -w)" in
+      0) echo "Restarting OpenDayLight Karaf"
+         /opt/distribution-karaf-0.4.0-Beryllium/bin/start
+         ;;
+      1) echo "Karaf already running. Nothing to do"
+         ;;
+      *) echo "More than one Containers running. Stopping few."
+         kill $(pidof karaf | awk '{print $1}')
+         ;;
+      esac
+    EOF
+  end
 end
 

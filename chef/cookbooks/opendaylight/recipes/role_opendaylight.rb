@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-include_recipe "updater::default"
+include_recipe "opendaylight::default"
