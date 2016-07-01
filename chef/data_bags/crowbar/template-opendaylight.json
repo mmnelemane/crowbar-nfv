@@ -19,7 +19,7 @@
         [ "opendaylight" ]
       ],
       "element_run_list_order": {
-        "opendaylight": 83
+        "opendaylight": 81
       },
       "config": {
         "environment": "opendaylight-config-base",
