@@ -17,3 +17,4 @@
 # limitations under the License.
 #
 
+default[:opendaylight][:logfile] = "/dev/null"

@@ -26,7 +26,7 @@ if node[:platform_family] == "suse"
     code <<-EOF
       case "$(pidof karaf | wc -w)" in
       0) echo "Restarting OpenDayLight Karaf"
-         /opt/distribution-karaf-0.4.0-Beryllium/bin/start
+         KARAF_REDIRECT=#{node[:opendaylight][:logfile]} /opt/distribution-karaf-0.4.0-Beryllium/bin/start
          ;;
       1) echo "Karaf already running. Nothing to do"
          ;;
