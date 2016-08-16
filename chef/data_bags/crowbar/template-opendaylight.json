@@ -3,7 +3,7 @@
   "description": "Software defined network",
   "attributes": {
     "opendaylight": {
-      
+      "logfile" : "/dev/null"
     }
   },
   "deployment": {

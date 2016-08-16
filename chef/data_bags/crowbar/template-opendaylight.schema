@@ -12,7 +12,7 @@
           "type": "map",
           "required": true,
           "mapping": {
-            
+            "logfile": { "type": "str", "required": true }
           }
         }
       }
