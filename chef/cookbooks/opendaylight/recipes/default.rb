@@ -19,22 +19,26 @@
 
 if node[:platform_family] == "suse"
 
-  package "opendaylight-java"
+  package "opendaylight"
 
-  bash "start opendaylight controller" do
+  service "opendaylight" do
+    supports status: true, restart: true
+    action [:enable, :start]
+  end
+
+
+  # Karaf takes some time to start ssh server access. This will fail
+  # if we try to connect to karaf immediately after service start.
+  # Adding 3 retries with 2 seconds granularity. Might tune it later
+  # if 2 seconds wait it too much
+  bash "install opendaylight features" do
     user "root"
-    code <<-EOF
-      case "$(pidof karaf | wc -w)" in
-      0) echo "Restarting OpenDayLight Karaf"
-         KARAF_REDIRECT=#{node[:opendaylight][:logfile]} /opt/distribution-karaf-0.4.0-Beryllium/bin/start
-         ;;
-      1) echo "Karaf already running. Nothing to do"
-         ;;
-      *) echo "More than one Containers running. Stopping few."
-         kill $(pidof karaf | awk '{print $1}')
-         ;;
-      esac
-    EOF
+    retries 3
+    retry_delay 2
+    code <<-EOH
+        /opt/opendaylight/bin/client -u karaf feature:install \
+        #{node[:opendaylight][:features]} &> /dev/null
+    EOH
   end
 end
 

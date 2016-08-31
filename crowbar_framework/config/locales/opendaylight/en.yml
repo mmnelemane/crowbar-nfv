@@ -20,4 +20,4 @@ en:
   barclamp:
     opendaylight:
       edit_attributes:
-        logfile: 'Karaf logfile'
+        features: 'OpenDaylight features'

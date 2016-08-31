@@ -17,4 +17,4 @@
 # limitations under the License.
 #
 
-default[:opendaylight][:logfile] = "/dev/null"
+default[:opendaylight][:features] = "odl-restconf odl-l2switch-switch odl-dlux-core odl-ovsdb-openstack"

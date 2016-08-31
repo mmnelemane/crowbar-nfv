@@ -3,7 +3,7 @@
   "description": "Software defined network",
   "attributes": {
     "opendaylight": {
-      "logfile" : "/dev/null"
+      "features" : "odl-restconf odl-l2switch-switch odl-dlux-core odl-ovsdb-openstack"
     }
   },
   "deployment": {
