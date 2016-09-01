@@ -21,3 +21,5 @@ en:
     opendaylight:
       edit_attributes:
         features: 'OpenDaylight features'
+        port: 'OpenDaylight web portal port'
+

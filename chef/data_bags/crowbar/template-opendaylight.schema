@@ -12,7 +12,8 @@
           "type": "map",
           "required": true,
           "mapping": {
-            "features": { "type": "str", "required": true }
+            "features": { "type": "str", "required": true },
+            "port": { "type": "int", "required": true }
           }
         }
       }

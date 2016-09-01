@@ -21,6 +21,19 @@ if node[:platform_family] == "suse"
 
   package "opendaylight"
 
+  # change opendaylight primary web portal port. port 8181 is still
+  # used as backup port
+  template "/opt/opendaylight/etc/jetty.xml" do
+    source "jetty.xml.erb"
+    owner "odl"
+    group "odl"
+    mode "0640"
+    variables(
+      port: node[:opendaylight][:port],
+    )
+    notifies :restart, 'service[opendaylight]', :immediately
+  end
+
   service "opendaylight" do
     supports status: true, restart: true
     action [:enable, :start]
