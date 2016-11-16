@@ -1,4 +1,3 @@
-#
 # Copyright 2016, SUSE LINUX Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +13,10 @@
 # limitations under the License.
 #
 
-barclamp:
-  name: 'opendaylight'
-  display: 'OpenDaylight'
-  description: 'OpenSource Software defined Networking(SDN) Controller'
-  version: 0
-  user_managed: true
-  member:
-    - 'nfv'
+class NfvController < BarclampController
+  protected
 
-crowbar:
-  layout: 1
-  order: 81
-  run_order: 81
-  chef_order: 81
-  proposal_schema_version: 0
+  def initialize_service
+    @service_object = NfvService.new logger
+  end
+end
