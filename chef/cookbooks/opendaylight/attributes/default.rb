@@ -17,5 +17,5 @@
 # limitations under the License.
 #
 
-default[:opendaylight][:features] = "odl-restconf odl-l2switch-switch odl-dlux-core odl-ovsdb-openstack"
+default[:opendaylight][:features] = "odl-netvirt-openstack"
 default[:opendaylight][:port] = "8070"
