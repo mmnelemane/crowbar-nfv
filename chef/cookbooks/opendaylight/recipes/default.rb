@@ -34,13 +34,37 @@ if node[:platform_family] == "suse"
     notifies :restart, 'service[opendaylight]', :immediately
   end
 
+  # (mmnelemane): Temporary workaround to avoid Security Group related configurations
+  # in neutron and simplify SDN deployment.
+
+  directory "/opt/opendaylight/etc/opendaylight/datastore/initial/config" do
+    owner "odl"
+    group "odl"
+    mode "0755"
+    action :create
+    recursive true
+  end
+
+  odl_conf_path = "/opt/opendaylight/etc/opendaylight"
+  template "#{odl_conf_path}/datastore/initial/config/netvirt-aclservice-config.xml" do
+    source "netvirt-aclservice-config.xml.erb"
+    owner "odl"
+    group "odl"
+    mode "0640"
+    variables(
+      security_group_mode: "transparent"
+    )
+    notifies :restart, "service[opendaylight]", :immediately
+  end
+
   # Stop and Disable opendaylight service if already running
   service "opendaylight" do
     action [:stop, :enable]
   end
 
   # Remove temporary directories created by previous run of opendaylight service
-  %w[ /opt/opendaylight/data/ /opt/opendaylight/snapshots /opt/opendaylight/instances /opt/opendaylight/journal].each do |path|
+  %w(/opt/opendaylight/data /opt/opendaylight/snapshots
+     /opt/opendaylight/instances /opt/opendaylight/journal).each do |path|
     directory path do
       recursive true
       action :delete
