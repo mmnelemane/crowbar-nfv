@@ -34,11 +34,49 @@ if node[:platform_family] == "suse"
     notifies :restart, 'service[opendaylight]', :immediately
   end
 
+  # (mmnelemane): Temporary workaround to avoid Security Group related configurations
+  # in neutron and simplify SDN deployment.
+
+  directory "/opt/opendaylight/etc/opendaylight/datastore/initial/config" do
+    owner "odl"
+    group "odl"
+    mode "0755"
+    action :create
+    recursive true
+  end
+
+  odl_conf_path = "/opt/opendaylight/etc/opendaylight"
+  template "#{odl_conf_path}/datastore/initial/config/netvirt-aclservice-config.xml" do
+    source "netvirt-aclservice-config.xml.erb"
+    owner "odl"
+    group "odl"
+    mode "0640"
+    variables(
+      security_group_mode: "transparent"
+    )
+    notifies :restart, "service[opendaylight]", :immediately
+  end
+
+  # Stop and Disable opendaylight service if already running
+  service "opendaylight" do
+    action [:stop, :enable]
+  end
+
+  # Remove temporary directories created by previous run of opendaylight service
+  %w(/opt/opendaylight/data /opt/opendaylight/snapshots
+     /opt/opendaylight/instances /opt/opendaylight/journal).each do |path|
+    directory path do
+      recursive true
+      action :delete
+    end
+  end
+
+  # Start Opendaylight service in clean mode.
   service "opendaylight" do
     supports status: true, restart: true
     action [:enable, :start]
+    start_command "/opt/opendaylight/bin/start clean"
   end
-
 
   # Karaf takes some time to start ssh server access. This will fail
   # if we try to connect to karaf immediately after service start.
@@ -47,7 +85,7 @@ if node[:platform_family] == "suse"
   bash "install opendaylight features" do
     user "root"
     retries 3
-    retry_delay 2
+    retry_delay 10
     code <<-EOH
         /opt/opendaylight/bin/client -u karaf feature:install \
         #{node[:opendaylight][:features]} &> /dev/null
