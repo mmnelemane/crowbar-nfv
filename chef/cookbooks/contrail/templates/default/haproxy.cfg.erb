@@ -1,0 +1,102 @@
+global
+  log /dev/log daemon
+  maxconn 32768
+  chroot /var/lib/haproxy
+  user haproxy
+  group haproxy
+  daemon
+  stats socket /var/lib/haproxy/stats user haproxy group haproxy mode 0640 level operator
+  tune.bufsize 32768
+  tune.ssl.default-dh-param 2048
+  ssl-default-bind-ciphers ALL:!aNULL:!eNULL:!EXPORT:!DES:!3DES:!MD5:!PSK:!RC4:!ADH:!LOW@STRENGTH
+
+defaults
+  log     global
+  mode    http
+  option  log-health-checks
+  option  log-separate-errors
+  option  dontlog-normal
+  option  dontlognull
+  option  httplog
+  option  socket-stats
+  retries 3
+  option  redispatch
+  maxconn 10000
+  timeout connect     5s
+  timeout client     50s
+  timeout server    450s
+
+
+#---------------------------------------------------------------------
+# main frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend  main 
+    bind *:5001
+    #acl url_static       path_beg       -i /static /images /javascript /stylesheets
+    #acl url_static       path_end       -i .jpg .gif .png .css .js
+
+    #use_backend static          if url_static
+    default_backend             app
+
+
+#---------------------------------------------------------------------
+# static backend for serving up images, stylesheets and such
+#---------------------------------------------------------------------
+backend static
+    balance     roundrobin
+    server      static 127.0.0.1:4331 check
+
+#---------------------------------------------------------------------
+# round robin balancing between the various backends
+#---------------------------------------------------------------------
+backend app
+    balance     roundrobin
+    server  app1 127.0.0.1:5001 check
+    server  app2 127.0.0.1:5002 check
+    server  app3 127.0.0.1:5003 check
+    server  app4 127.0.0.1:5004 check
+
+#contrail-config-marker-start
+
+global  
+   tune.maxrewrite 1024
+
+listen contrail-config-stats 
+   bind :5937
+   mode http
+   stats enable
+   stats uri /
+   stats auth haproxy:557cfedc2e9ff031407e
+
+frontend  quantum-server 
+    bind *:9696
+    default_backend    quantum-server-backend
+
+frontend  contrail-api 
+    bind *:8082
+    default_backend    contrail-api-backend
+    timeout client 3m
+
+frontend  contrail-discovery 
+    bind *:5998
+    default_backend    contrail-discovery-backend
+
+backend quantum-server-backend
+    option nolinger
+    balance     roundrobin
+
+    server <%= @control_plane_ip %> <%= @control_plane_ip %>:9697 check inter 2000 rise 2 fall 3
+
+backend contrail-api-backend
+    option nolinger
+    timeout server 3m
+    balance     roundrobin
+
+    server <%= @control_plane_ip %> <%= @control_plane_ip %>:9100 check inter 2000 rise 2 fall 3
+
+backend contrail-discovery-backend
+    option nolinger
+    balance     roundrobin
+    server <%= @control_plane_ip %> <%= @control_plane_ip %>:9110 check inter 2000 rise 2 fall 3
+
+#contrail-config-marker-end

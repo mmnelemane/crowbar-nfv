@@ -1,0 +1,34 @@
+{
+  "id": "template-contrail",
+  "description": "Software defined network",
+  "attributes": {
+    "contrail": {
+      "controller_ip" : "",
+      "admin_ip" : ""
+    }
+  },
+  "deployment": {
+    "contrail": {
+      "crowbar-revision": 0,
+      "crowbar-applied": false,
+      "schema-revision": 100,
+      "element_states": {
+        "contrail": [ "readying", "ready", "applying" ]
+      },
+      "elements": {},
+      "element_order": [
+        [ "contrail" ]
+      ],
+      "element_run_list_order": {
+        "contrail": 83
+      },
+      "config": {
+        "environment": "contrail-config-base",
+        "mode": "full",
+        "transitions": false,
+        "transition_list": [
+        ]
+      }
+    }
+  }
+}

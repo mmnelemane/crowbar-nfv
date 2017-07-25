@@ -1,0 +1,7 @@
+= attributes_for @proposal do
+  .panel-sub
+    = header show_raw_deployment?, true
+
+  .panel-body
+    = string_field :controller_ip
+    = string_field :admin_ip
