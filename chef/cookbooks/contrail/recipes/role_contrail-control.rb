@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-include_recipe "opencontrail::default"
+include_recipe "contrail::control"

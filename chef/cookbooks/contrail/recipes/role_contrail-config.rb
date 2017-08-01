@@ -1,5 +1,5 @@
 #
-# Copyright 2016, SUSE LINUX Products GmbH
+# Copyright 2016, SUSE LINUX GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,4 @@
 # limitations under the License.
 #
 
-maintainer "Crowbar Project"
-maintainer_email "crowbar@dell.com"
-license "Apache 2.0"
-description "Contrail(SDN) installation and deployment"
-long_description ""
-version "0.0.1"
-
-recipe "contrail", "Contrail software defined network"
+include_recipe "contrail::config"

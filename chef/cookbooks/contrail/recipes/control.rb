@@ -1,4 +1,7 @@
 #
+# Cookbook Name:: contrail
+# Recipe:: control
+#
 # Copyright 2016, SUSE LINUX Products GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +17,3 @@
 # limitations under the License.
 #
 
-maintainer "Crowbar Project"
-maintainer_email "crowbar@dell.com"
-license "Apache 2.0"
-description "Contrail(SDN) installation and deployment"
-long_description ""
-version "0.0.1"
-
-recipe "contrail", "Contrail software defined network"
